@@ -1,0 +1,39 @@
+# %%%%%%%%%%%%%%%%%%%% ROLE: LINUX
+
+# --- 开关
+
+linux__enable_time: yes
+linux__enable_time_ntp: yes
+
+# --- 参数
+
+# 操作系统时区
+linux__timezone: "Asia/Shanghai"
+linux__time_ntp_servers:
+  - ntp.aliyun.com
+  - ntp.tencent.com
+
+linux__chrony_install_media: "chrony.zip"
+linux__chrony_install_media_upload: "/upload/chrony"
+
+linux__dir_yum_repofile_backup: "/upload/yum_repofile"
+
+# %%%%%%%%%%%%%%%%%%%% ROLE: JAVA
+
+java__install_media: "{{ dir__ansible_server__files }}/java/jdk-17.0.10_linux-x64_bin.tar.gz"
+java__dir_base: "/usr/local"
+java__dir_home: "{{ java__dir_base }}/jdk-17.0.10"
+
+# %%%%%%%%%%%%%%%%%%%% ROLE: Grafana
+grafana__server: "192.168.5.104"
+
+# %%%%%%%%%%%%%%%%%%%% ROLE: Prometheus
+prometheus__install_media: "{{ dir__ansible_server__files }}/prometheus/prometheus-3.1.0-rc.0.linux-amd64.tar.gz"
+
+prometheus__dir_upload: "/upload/prometheus"
+prometheus__install_media_uploaded: "{{ prometheus__dir_upload }}/"
+
+prometheus__dir_base: "/opt"
+prometheus__dir_home: "{{ prometheus__dir_base }}"
+
+# %%%%%%%%%%%%%%%%%%%% ROLE: node_exporter

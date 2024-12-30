@@ -1,0 +1,9 @@
+[prometheus_server]
+prometheus ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[node_exporter]
+node01 ansible_host=192.168.5.104 ansible_port=22 ansible_user="admin" ansible_ssh_pass="oracle" ansible_become_password="oracle"
+
+[prometheus:children]
+prometheus_server
+node_exporter

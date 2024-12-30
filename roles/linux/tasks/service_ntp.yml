@@ -1,0 +1,45 @@
+- name: "create directory for chrony"
+  file:
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    path: "{{ linux__chrony_install_media_upload }}"
+
+- name: "upload and uncompress chrony"
+  unarchive:
+    owner: root
+    group: root
+    mode: 0755
+    src: "{{ linux__chrony_install_media }}"
+    dest: "{{ linux__chrony_install_media_upload }}"
+
+- name: "find all rpm package"
+  find:
+    paths: "{{ linux__chrony_install_media_upload }}"
+    patterns: "*.rpm"
+  register: rpm_files
+
+- name: "set fact: rpm_list"
+  set_fact:
+    rpm_list: "{{ rpm_files.files | map(attribute='path') | list }}"
+
+- name: "install chrony"
+  yum:
+    name: "{{ rpm_list }}"
+    state: present
+
+- name: "chrony config file"
+  template:
+    owner: root
+    group: root
+    mode: 0644
+    src: "chrony.conf.j2"
+    dest: "/etc/chrony.conf"
+
+- name: "chrony linux service"
+  systemd:
+    name: chronyd
+    state: restarted
+    enabled: yes
+  ignore_errors: yes

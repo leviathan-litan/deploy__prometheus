@@ -1,0 +1,47 @@
+- name: "Linux Config"
+  hosts:
+    - prometheus
+  roles:
+    - linux
+  vars_files:
+    - vars/prometheus__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: "Deploy Java"
+  hosts:
+    - prometheus
+  roles:
+    - java
+  vars_files:
+    - vars/prometheus__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo
+
+- name: "Deploy Prometheus Server"
+  hosts:
+    - prometheus_server
+  roles:
+    - prometheus
+  vars_files:
+    - vars/prometheus__deploy.yml
+  gather_facts: yes
+  become: yes
+  become_user: root
+  become_method: sudo
+
+# - name: "Deploy Node Exporter"
+#   hosts:
+#     - node_exporter
+#   roles:
+#     - node_exporter
+#   vars_files:
+#     - vars/prometheus__deploy.yml
+#   gather_facts: yes
+#   become: yes
+#   become_user: root
+#   become_method: sudo

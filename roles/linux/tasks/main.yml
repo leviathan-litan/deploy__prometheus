@@ -1,0 +1,95 @@
+- name: "/etc/hosts: Add records / Empty Line"
+  lineinfile:
+    backup: yes
+    path: /etc/hosts
+    insertafter: EOF
+    line: ""
+
+- name: "/etc/hosts: Add records"
+  lineinfile:
+    backup: yes
+    path: /etc/hosts
+    insertafter: EOF
+    line: "{{ hostvars[item]['ansible_host'] }}    {{ hostvars[item]['ansible_hostname'] }}"
+  with_items:
+    - "{{ groups['prometheus'] }}"
+
+- name: "SELINUX: disable"
+  selinux:
+    state: disabled
+
+- name: "firewalld: disable"
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+
+- name: "file: limits.conf"
+  blockinfile:
+    backup: yes
+    path: /etc/security/limits.conf
+    block: |
+      *    soft nofile 1000000
+      *    hard nofile 1000000
+
+- name: "sysctl"
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+  with_items:
+    - name: "vm.max_map_count"
+      value: "2000000"
+    - name: "net.core.somaxconn"
+      value: "65535"
+
+- name: "swap: remove from fstab"
+  lineinfile:
+    path: /etc/fstab
+    regexp: "\\sswap\\s"
+    state: "absent"
+    backup: yes
+
+- name: "swap: disable"
+  shell: |
+    swapoff -a
+  ignore_errors: yes
+
+- name: "disable: transparent_hugepage"
+  shell: |
+    echo never > {{ item }}
+  with_items:
+    - "/sys/kernel/mm/transparent_hugepage/enabled"
+    - "/sys/kernel/mm/transparent_hugepage/defrag"
+  ignore_errors: yes
+
+- name: "yum: enable keepcache"
+  shell: |
+    sed -i 's#keepcache=0#keepcache=1#g' /etc/yum.conf
+  ignore_errors: yes
+
+- name: "yum: backup repofile / create directory"
+  file:
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    path: "{{ linux__dir_yum_repofile_backup }}"
+
+- name: "yum: backup repofile"
+  shell: |
+    mv /etc/yum.repos.d/* {{ linux__dir_yum_repofile_backup }}
+  ignore_errors: yes
+
+- name: "time zone"
+  shell: |
+    timedatectl set-timezone {{ linux__timezone }}
+  when:
+    - linux__enable_time
+
+- name: "time ntp"
+  include_tasks:
+    file: service_ntp.yml
+  when:
+    - linux__enable_time_ntp

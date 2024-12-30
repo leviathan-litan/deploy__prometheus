@@ -1,0 +1,27 @@
+- name: "create directory"
+  file:
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    path: "{{ java__dir_home }}"
+
+- name: "install media: uncompress"
+  unarchive:
+    owner: root
+    group: root
+    mode: 0755
+    src: "{{ java__install_media }}"
+    dest: "{{ java__dir_base }}"
+
+- name: "/etc/profile.d/jdk.sh"
+  template:
+    owner: root
+    group: root
+    mode: 0644
+    src: "jdk.sh.j2"
+    dest: "/etc/profile.d/jdk.sh"
+
+- name: "source /etc/profile.d/jdk.sh"
+  shell: |
+    source /etc/profile.d/jdk.sh
