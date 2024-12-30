@@ -28,12 +28,12 @@ java__dir_home: "{{ java__dir_base }}/jdk-17.0.10"
 grafana__server: "192.168.5.104"
 
 # %%%%%%%%%%%%%%%%%%%% ROLE: Prometheus
-prometheus__install_media: "{{ dir__ansible_server__files }}/prometheus/prometheus-3.1.0-rc.0.linux-amd64.tar.gz"
+prometheus__install_media: "{{ dir__ansible_server__files }}/prometheus/prometheus-3.0.1.linux-amd64.tar.gz"
 
 prometheus__dir_upload: "/upload/prometheus"
-prometheus__install_media_uploaded: "{{ prometheus__dir_upload }}/"
+prometheus__install_media_uploaded: "{{ prometheus__dir_upload }}/prometheus-3.0.1.linux-amd64"
 
 prometheus__dir_base: "/opt"
-prometheus__dir_home: "{{ prometheus__dir_base }}"
+prometheus__dir_home: "{{ prometheus__dir_base }}/prometheus"
 
 # %%%%%%%%%%%%%%%%%%%% ROLE: node_exporter

@@ -16,3 +16,11 @@
     mode: 0755
     src: "{{ prometheus__install_media }}"
     dest: "{{ prometheus__dir_upload }}"
+
+- name: "copy Prometheus to Prometheus home directory"
+  shell: |
+    cp -rf {{ prometheus__install_media_uploaded }}/* {{ prometheus__dir_home }}
+
+- name: "Prometheus: run server"
+  shell: |
+    nohup {{ prometheus__dir_home }}/prometheus --config.file="{{ prometheus__dir_home }}/prometheus.yml" &

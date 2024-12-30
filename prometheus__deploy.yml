@@ -1,6 +1,6 @@
 - name: "Linux Config"
   hosts:
-    - prometheus
+    - all
   roles:
     - linux
   vars_files:
@@ -10,17 +10,17 @@
   become_user: root
   become_method: sudo
 
-- name: "Deploy Java"
-  hosts:
-    - prometheus
-  roles:
-    - java
-  vars_files:
-    - vars/prometheus__deploy.yml
-  gather_facts: yes
-  become: yes
-  become_user: root
-  become_method: sudo
+# - name: "Deploy Java"
+#   hosts:
+#     - all
+#   roles:
+#     - java
+#   vars_files:
+#     - vars/prometheus__deploy.yml
+#   gather_facts: yes
+#   become: yes
+#   become_user: root
+#   become_method: sudo
 
 - name: "Deploy Prometheus Server"
   hosts:
