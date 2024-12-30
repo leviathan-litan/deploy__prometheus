@@ -1,2 +1,1 @@
-# deploy__prometheus
-Deploy Prometheus by Ansible
+# Deploy Prometheus by Ansible
