@@ -35,5 +35,6 @@ prometheus__install_media_uploaded: "{{ prometheus__dir_upload }}/prometheus-3.0
 
 prometheus__dir_base: "/opt"
 prometheus__dir_home: "{{ prometheus__dir_base }}/prometheus"
+prometheus__dir_data: "/data/prometheus"
 
 # %%%%%%%%%%%%%%%%%%%% ROLE: node_exporter

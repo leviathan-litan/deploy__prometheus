@@ -8,6 +8,7 @@
   with_items:
     - "{{ prometheus__dir_upload }}"
     - "{{ prometheus__dir_home }}"
+    - "{{ prometheus__dir_data }}"
 
 - name: "upload and uncompress Prometheus install media"
   unarchive:
@@ -21,6 +22,32 @@
   shell: |
     cp -rf {{ prometheus__install_media_uploaded }}/* {{ prometheus__dir_home }}
 
-- name: "Prometheus: run server"
-  shell: |
-    nohup {{ prometheus__dir_home }}/prometheus --config.file="{{ prometheus__dir_home }}/prometheus.yml" &
+# - name: "Prometheus: prometheus_start.sh"
+#   template:
+#     owner: root
+#     group: root
+#     mode: 0755
+#     src: "prometheus_start.sh.j2"
+#     dest: "{{ prometheus__dir_home }}/prometheus_start.sh"
+
+# - name: "Prometheus: prometheus_start.sh / execute"
+#   shell: |
+#     sh {{ prometheus__dir_home }}/prometheus_start.sh
+
+- name: "Prometheus: system service prometheus-server"
+  template:
+    owner: root
+    group: root
+    mode: 0755
+    src: "prometheus-server.service.j2"
+    dest: "/etc/systemd/system/prometheus-server.service"
+
+- name: "systemctl daemon-reload"
+  systemd:
+    daemon_reload: yes
+
+- name: "Prometheus: run prometheus-server"
+  systemd:
+    name: "prometheus-server"
+    enabled: yes
+    state: restarted

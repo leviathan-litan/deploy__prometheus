@@ -1,0 +1,25 @@
+[Unit]
+Description=Prometheus Server
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network.target
+
+[Service]
+Restart=on-failure
+ExecStart={{ prometheus__dir_home }}/prometheus \
+    --config.file={{ prometheus__dir_home }}/prometheus.yml \
+    --web.enable-lifecycle \
+    --storage.tsdb.path={{ prometheus__dir_data }} \
+    --storage.tsdb.retention.time=60d \
+    --web.listen-address=0.0.0.0:9090 \
+    --web.max-connections=4096 \
+    --storage.tsdb.retention.size=512MB \
+    --query.timeout=10s \
+    --query.max-concurrency=20 \
+    --log.level=info \
+    --log.format=json \
+    --web.read-timeout=5m
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
