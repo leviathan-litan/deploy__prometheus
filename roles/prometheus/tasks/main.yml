@@ -10,8 +10,6 @@
     - "{{ prometheus__dir_home }}"
     - "{{ prometheus__dir_scrape_config_files }}"
     - "{{ prometheus__dir_data }}"
-  when:
-    - inventory_hostname in groups['prometheus_server']
 
 - name: "upload and uncompress Prometheus install media"
   unarchive:
@@ -20,14 +18,10 @@
     mode: 0755
     src: "{{ prometheus__install_media }}"
     dest: "{{ prometheus__dir_upload }}"
-  when:
-    - inventory_hostname in groups['prometheus_server']
 
 - name: "copy Prometheus to Prometheus home directory"
   shell: |
     cp -rf {{ prometheus__install_media_uploaded }}/* {{ prometheus__dir_home }}
-  when:
-    - inventory_hostname in groups['prometheus_server']
 
 - name: "Prometheus: prometheus.yml"
   template:
@@ -36,8 +30,6 @@
     mode: 0755
     src: "prometheus.yml.j2"
     dest: "{{ prometheus__dir_home }}/prometheus.yml"
-  when:
-    - inventory_hostname in groups['prometheus_server']
 
 - name: "Prometheus: scrape_config_files/server.yml"
   template:
@@ -46,8 +38,6 @@
     mode: 0755
     src: "server.yml.j2"
     dest: "{{ prometheus__dir_home }}/scrape_config_files/server.yml"
-  when:
-    - inventory_hostname in groups['node_exporter']
 
 # - name: "Prometheus: prometheus_start.sh"
 #   template:
@@ -68,19 +58,13 @@
     mode: 0755
     src: "prometheus-server.service.j2"
     dest: "/etc/systemd/system/prometheus-server.service"
-  when:
-    - inventory_hostname in groups['prometheus_server']
 
 - name: "systemctl daemon-reload"
   systemd:
     daemon_reload: yes
-  when:
-    - inventory_hostname in groups['prometheus_server']
 
 - name: "Prometheus: run prometheus-server"
   systemd:
     name: "prometheus-server"
     enabled: yes
     state: restarted
-  when:
-    - inventory_hostname in groups['prometheus_server']

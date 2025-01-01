@@ -25,7 +25,6 @@
 - name: "Deploy Prometheus Server"
   hosts:
     - prometheus_server
-    - node_exporter
   roles:
     - prometheus
   vars_files:
