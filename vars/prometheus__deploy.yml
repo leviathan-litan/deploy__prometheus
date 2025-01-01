@@ -35,6 +35,17 @@ prometheus__install_media_uploaded: "{{ prometheus__dir_upload }}/prometheus-3.0
 
 prometheus__dir_base: "/opt"
 prometheus__dir_home: "{{ prometheus__dir_base }}/prometheus"
+prometheus__dir_scrape_config_files: "{{ prometheus__dir_home }}/scrape_config_files"
+
 prometheus__dir_data: "/data/prometheus"
 
 # %%%%%%%%%%%%%%%%%%%% ROLE: node_exporter
+node_exporter__install_media: "{{ dir__ansible_server__files }}/node_exporter/node_exporter-1.8.2.linux-amd64.tar.gz"
+
+node_exporter__dir_upload: "/upload/prometheus"
+node_exporter__install_media_uploaded: "{{ node_exporter__dir_upload }}/node_exporter-1.8.2.linux-amd64"
+
+node_exporter__dir_base: "/opt"
+node_exporter__dir_home: "{{ node_exporter__dir_base }}/node_exporter"
+
+node_exporter__file_log: "{{ node_exporter__dir_home }}/node_exporter.log"

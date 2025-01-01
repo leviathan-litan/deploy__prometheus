@@ -1,0 +1,17 @@
+[Unit]
+Description=node_exporter
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestarSec=10
+StartLimitInterval=100
+ExecStart={{ node_exporter__dir_home }}/node_exporter \
+    --web.listen-address=0.0.0.0:9100 > {{ node_exporter__file_log }}
+ExecReload=/bin/kill -HUP $MAINPID
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

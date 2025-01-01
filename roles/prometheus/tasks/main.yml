@@ -8,6 +8,7 @@
   with_items:
     - "{{ prometheus__dir_upload }}"
     - "{{ prometheus__dir_home }}"
+    - "{{ prometheus__dir_scrape_config_files }}"
     - "{{ prometheus__dir_data }}"
 
 - name: "upload and uncompress Prometheus install media"
@@ -21,6 +22,22 @@
 - name: "copy Prometheus to Prometheus home directory"
   shell: |
     cp -rf {{ prometheus__install_media_uploaded }}/* {{ prometheus__dir_home }}
+
+- name: "Prometheus: prometheus.yml"
+  template:
+    owner: root
+    group: root
+    mode: 0755
+    src: "prometheus.yml.j2"
+    dest: "{{ prometheus__dir_home }}/prometheus.yml"
+
+- name: "Prometheus: scrape_config_files/server.yml"
+  template:
+    owner: root
+    group: root
+    mode: 0755
+    src: "server.yml.j2"
+    dest: "{{ prometheus__dir_home }}/scrape_config_files/server.yml"
 
 # - name: "Prometheus: prometheus_start.sh"
 #   template:

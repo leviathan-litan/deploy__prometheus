@@ -1,0 +1,41 @@
+- name: "create directory"
+  file:
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    path: "{{ item }}"
+  with_items:
+    - "{{ node_exporter__dir_upload }}"
+    - "{{ node_exporter__dir_home }}"
+
+- name: "upload and uncompress node_exporter install media"
+  unarchive:
+    owner: root
+    group: root
+    mode: 0755
+    src: "{{ node_exporter__install_media }}"
+    dest: "{{ node_exporter__dir_upload }}"
+
+- name: "copy Prometheus to Prometheus home directory"
+  shell: |
+    cp -rf {{ node_exporter__install_media_uploaded }}/* {{ node_exporter__dir_home }}
+
+
+- name: "Prometheus: system service node_exporter"
+  template:
+    owner: root
+    group: root
+    mode: 0755
+    src: "node_exporter.service.j2"
+    dest: "/etc/systemd/system/node_exporter.service"
+
+- name: "systemctl daemon-reload"
+  systemd:
+    daemon_reload: yes
+
+- name: "Prometheus: run node_exporter"
+  systemd:
+    name: "node_exporter"
+    enabled: yes
+    state: restarted
