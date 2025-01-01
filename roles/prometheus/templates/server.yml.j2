@@ -8,15 +8,13 @@ scrape_configs:
     # ------------------------------------------------------------
 
 {% for item in groups['node_exporter'] %}
-{{ hostvars[item]['ansible_host'] }}
-{% endfor %}
-
     # Prometheus
     - targets:
-      - '127.0.0.1:9100'
+      - '{{ hostvars[item]['ansible_host'] }}:9100'
       labels:
         service: prometheus-server
         country: china
         region: ''
         zone: ''
-    
+
+{% endfor %}
