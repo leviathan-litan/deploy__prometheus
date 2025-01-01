@@ -9,7 +9,10 @@ Restart=always
 RestarSec=10
 StartLimitInterval=100
 ExecStart={{ node_exporter__dir_home }}/node_exporter \
-    --web.listen-address=0.0.0.0:9100 > {{ node_exporter__file_log }}
+    --web.listen-address=0.0.0.0:9100 \
+    --log.file.path={{ node_exporter__file_log }} \
+    --log.level=info \
+    --log.format=logfmt \
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65535
 
