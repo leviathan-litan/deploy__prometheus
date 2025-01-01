@@ -68,3 +68,7 @@
     name: "prometheus-server"
     enabled: yes
     state: restarted
+
+- name: "安装完成后，..."
+  debug:
+    msg: "检查目录【{{ prometheus__dir_scrape_config_files }}】中的配置文件的配置【server.yml / ...】"
